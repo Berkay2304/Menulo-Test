@@ -152,13 +152,13 @@ class _MenuBotPageState extends State<MenuBotPage> {
                   ),
                   Row(
                     children: [
-                      const Icon(Icons.star, color: Colors.orange, size: 12),
+                      const Icon(Icons.star, color: Color(0xFFFFA63B), size: 12),
                       Text(
                         " ${msg["rating"]}",
                         style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: Colors.orange,
+                          color: Color(0xFFFFA63B),
                         ),
                       ),
                     ],

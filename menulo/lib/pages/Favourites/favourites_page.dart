@@ -107,7 +107,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
       },
       child: GestureDetector(
         onTap: () {
-          // Menü sayfasına yönlendirme
+          
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -131,7 +131,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
           ),
           child: Row(
             children: [
-              // Restoran Görseli
+              
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
@@ -142,7 +142,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 ),
               ),
               const SizedBox(width: 15),
-              // Bilgiler
+              
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,7 +162,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         Icon(Icons.star, color: primaryOrange, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          restaurant["rating"]!.split(" ")[0], // Sadece puanı al (4.5)
+                          restaurant["rating"]!.split(" ")[0], 
                           style: TextStyle(
                             fontSize: 13, 
                             fontWeight: FontWeight.bold,
@@ -170,7 +170,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           ),
                         ),
                         Text(
-                          " ${restaurant["rating"]!.split(" ")[1]}", // Yorum sayısını al (86)
+                          " ${restaurant["rating"]!.split(" ")[1]}", 
                           style: const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                       ],
@@ -178,11 +178,11 @@ class _FavouritesPageState extends State<FavouritesPage> {
                   ],
                 ),
               ),
-              // Favori İkonu
+              
               IconButton(
                 icon: const Icon(Icons.favorite, color: Colors.red),
                 onPressed: () {
-                  // Favoriden çıkarma mantığı buraya gelebilir
+                  
                 },
               ),
             ],

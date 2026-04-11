@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:menulo/pages/QR/qrscan_page.dart';
 import 'package:menulo/pages/Room/create_room_page.dart';
-import 'room_page.dart'; // Bir önceki oluşturduğumuz sayfa
+import 'room_page.dart';
 
 class RoomsMainPage extends StatelessWidget {
   const RoomsMainPage({super.key});
@@ -69,7 +69,6 @@ class RoomsMainPage extends StatelessWidget {
     );
   }
 
-  // Yeni Oda Oluştur ve Odaya Katıl Butonları
   Widget _buildActionButtons(BuildContext context, Color primaryColor) {
     return Row(
       children: [
@@ -83,7 +82,7 @@ class RoomsMainPage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => const CreateRoomPage(),
-                ), // Hedef değişti
+                ),
               );
             },
           ),
@@ -119,13 +118,7 @@ class RoomsMainPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          
         ),
         child: Column(
           children: [
@@ -144,7 +137,6 @@ class RoomsMainPage extends StatelessWidget {
     );
   }
 
-  // Oda Listesi Elemanı (Bilet Görünümlü)
   Widget _buildRoomCard(
     BuildContext context, {
     required String roomName,
@@ -167,7 +159,6 @@ class RoomsMainPage extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // Sol Turuncu Şerit
               Container(
                 width: 10,
                 decoration: const BoxDecoration(
@@ -179,7 +170,7 @@ class RoomsMainPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 15),
-              // Oda Bilgileri
+              
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -200,7 +191,7 @@ class RoomsMainPage extends StatelessWidget {
                   ],
                 ),
               ),
-              // Durum Etiketi
+              
               Container(
                 margin: const EdgeInsets.only(right: 15),
                 padding: const EdgeInsets.symmetric(

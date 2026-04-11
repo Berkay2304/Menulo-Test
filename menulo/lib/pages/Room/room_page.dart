@@ -139,7 +139,7 @@ class _RoomPageState extends State<RoomPage> {
                 const Text(
                   "224 587",
                   style: TextStyle(
-                    color: Color(0xFFFEA02F),
+                    color: Color(0xFFFFA63B),
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
@@ -202,7 +202,7 @@ class _RoomPageState extends State<RoomPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Üst Panel (Hafif gri Kart)
+          
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
@@ -261,7 +261,7 @@ class _RoomPageState extends State<RoomPage> {
                     activeTrackColor: primaryOrange,
                     inactiveTrackColor: Colors.orange[100],
                     thumbColor: primaryOrange,
-                    overlayColor: primaryOrange.withOpacity(0.2),
+                    overlayColor: primaryOrange.withValues(alpha: 0.2),
                     valueIndicatorColor: primaryOrange,
                     valueIndicatorTextStyle: const TextStyle(
                       color: Colors.white,

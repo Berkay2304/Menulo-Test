@@ -45,12 +45,12 @@ class QRScanPage extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(Icons.close, color: Colors.white),
                 onPressed: () {
-                  // rootNavigator: true kullanarak en dıştaki Navigator'ı hedefliyoruz.
-                  // Bu sayede hem navbardan hem oda sayfasından gelenleri ortak kapatır.
+                  
+                  
                   if (Navigator.of(context, rootNavigator: true).canPop()) {
                     Navigator.of(context, rootNavigator: true).pop();
                   } else {
-                    // Pop yapılamıyorsa, siyah ekran yerine direkt ana sayfaya (Rooms) yönlendir
+                    
                     selectedIndexNotifier.value = 1;
                     Navigator.pushAndRemoveUntil(
                       context,

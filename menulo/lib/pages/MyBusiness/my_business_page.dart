@@ -8,10 +8,10 @@ class MyBusinessPage extends StatefulWidget {
 }
 
 class _MyBusinessPageState extends State<MyBusinessPage> {
-  // Tasarımdaki turuncu tonun
+  
   final Color primaryOrange = const Color(0xFFFFA63B);
 
-  // Controllerlar ile verileri yönetebilirsin
+  
   final TextEditingController _nameController = TextEditingController(
     text: "Yener Kitchen",
   );
@@ -27,13 +27,13 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // AppBar'ı HomePageOwner içinde tanımladığın için burada body'den başlıyoruz
-      // Ancak görseldeki gibi görselin AppBar'ın arkasına geçmesini istiyorsan
-      // HomePageOwner'daki AppBar'ı kaldırıp burada Sliver veya Stack kullanabiliriz.
+      
+      
+      
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 1. Üst Kısım: Resim ve Overlay Butonlar
+            
             Stack(
               children: [
                 Container(
@@ -53,9 +53,9 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
                   right: 20,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Başlık ortada, buton sağda
+                        .spaceBetween, 
                     children: [
-                      // Sol tarafı boş bırakıyoruz ki başlık tam ortalansın (veya geri butonu eklenebilir)
+                      
                       const SizedBox(width: 48),
 
                       const Text(
@@ -67,17 +67,17 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
                         ),
                       ),
 
-                      // Sign Out Butonu
+                      
                       IconButton(
                         icon: const Icon(
                           Icons.logout_rounded,
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          // Çıkış yaparken tüm stack'i temizleyip Splash'e döner
+                          
                           Navigator.pushNamedAndRemoveUntil(
                             context,
-                            '/', // Splash ekranının route ismi (genelde '/' olur)
+                            '/', 
                             (route) => false,
                           );
                         },
@@ -88,7 +88,7 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
               ],
             ),
 
-            // 2. Form Alanları
+            
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -126,12 +126,12 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
                   ),
 
                   const SizedBox(height: 30),
-                  // 3. Update Butonu
+                  
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Güncelleme mantığı
+                        
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryOrange,
@@ -160,7 +160,7 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
     );
   }
 
-  // Yardımcı Widget: Başlıklar
+  
   Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -175,7 +175,7 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
     );
   }
 
-  // Yardımcı Widget: Input Alanları
+  
   Widget _buildTextField(TextEditingController controller, {int maxLines = 1}) {
     return TextField(
       controller: controller,
@@ -200,7 +200,7 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
     );
   }
 
-  // Yardımcı Widget: Saat Alanları
+  
   Widget _buildTimeField(String text, IconData icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

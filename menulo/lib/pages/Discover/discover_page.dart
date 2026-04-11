@@ -63,11 +63,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
           elevation: 0,
           leading: _showDetail
               ? IconButton(
-                  icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
+                  icon: Icon(Icons.arrow_back, color: primaryColor),
                   onPressed: _closeDetail,
                 )
               : null,
-          title: const Text("Discover", style: TextStyle(color: Colors.black)),
+          title: const Text(
+            "Discover",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          ),
           centerTitle: true,
           actions: [
             Icon(Icons.info_outline, color: primaryColor, size: 28),
@@ -212,12 +215,12 @@ class _DiscoverPageState extends State<DiscoverPage> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.star, color: Colors.orange, size: 18),
+                  const Icon(Icons.star, color: Color(0xFFFFA63B), size: 18),
                   Text(
                     " 4.5",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.orange.shade700,
+                      color: Color(0xFFFFA63B),
                     ),
                   ),
                 ],

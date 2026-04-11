@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:menulo/pages/Menu/product_reviews.dart';
+import 'package:menulo/pages/Menu/resturant_reviews.dart';
 
 class RestaurantMenuPage extends StatefulWidget {
   const RestaurantMenuPage({super.key});
@@ -51,10 +53,31 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.reply, color: Colors.white, size: 28),
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 28,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
-                      const Icon(Icons.favorite_border, color: Colors.white, size: 28),
+
+                      IconButton(
+                        icon: const Icon(
+                          Icons.comment_outlined,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return RestaurantReviewsPage();
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -88,7 +111,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.grey[100],
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(30),
+                ),
               ),
               child: ListView.builder(
                 padding: const EdgeInsets.only(top: 8),
@@ -163,10 +188,13 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
           ),
           const SizedBox(height: 15),
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               _buildSmallChip(Icons.attach_money, "Budget"),
               const SizedBox(width: 10),
               _buildSmallChip(Icons.access_time, "09.00 - 22.00"),
+              const SizedBox(width: 48),
+              const Icon(Icons.favorite_border, color: Colors.red, size: 28),
             ],
           ),
         ],
@@ -177,9 +205,11 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
   Widget _buildCategoryItem(int index, Color primaryColor) {
     bool isSelected = _selectedCategoryIndex == index;
     String categoryName = _categories[index];
-    
-    Color normalColor = categoryName == "Green Menu" ? Colors.green : Colors.grey;
-    
+
+    Color normalColor = categoryName == "Green Menu"
+        ? Colors.green
+        : Colors.grey;
+
     Color textColor = isSelected ? primaryColor : normalColor;
 
     return GestureDetector(
@@ -228,7 +258,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(15),
+                ),
                 child: Image.asset(
                   "assets/images/food_mock.jpg",
                   height: 160,
@@ -240,7 +272,10 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                 top: 10,
                 right: 10,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
@@ -250,7 +285,10 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                       Icon(Icons.star, color: primaryColor, size: 14),
                       const Text(
                         " 4.5",
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
@@ -287,15 +325,32 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return ProductReviewsPage();
+                            },
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
                       ),
                       child: const Text(
-                        "Details",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        "Comments",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
