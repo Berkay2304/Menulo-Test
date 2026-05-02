@@ -3,6 +3,9 @@ import 'package:menulo/Theme/theme.dart';
 import 'package:menulo/pages/CustomerSide/Menu/product_reviews.dart';
 import 'package:menulo/pages/CustomerSide/Menu/resturant_reviews.dart';
 
+import 'package:menulo/models/product_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class RestaurantMenuPage extends StatefulWidget {
   const RestaurantMenuPage({super.key});
 
@@ -13,15 +16,7 @@ class RestaurantMenuPage extends StatefulWidget {
 class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
   int _selectedCategoryIndex = 2;
 
-  final List<String> _categories = [
-    "All",
-    "Chicken",
-    "Burger",
-    "Pizza",
-    "Salads",
-    "Drinks",
-    "Green Menu",
-  ];
+  final List<String> _categories = MockData.categories;
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +31,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                 Container(
                   height: 250,
                   width: double.infinity,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/restaurant_mock_up.jpg"),
+                      image: AssetImage(MockData.currentRestaurant.imageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -69,7 +64,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const RestaurantReviewsPage(),
+                              builder: (context) => RestaurantReviewsPage(restaurant: MockData.currentRestaurant),
                             ),
                           );
                         },
@@ -119,9 +114,11 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                 padding: const EdgeInsets.only(top: 8),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 4,
+
+                itemCount: MockData.mockProducts.length,
                 itemBuilder: (context, index) {
-                  return _buildFoodCard();
+                  final product = MockData.mockProducts[index];
+                  return _buildFoodCard(product);
                 },
               ),
             ),
@@ -132,6 +129,8 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
   }
 
   Widget _buildInfoCard() {
+    final restaurant = MockData.currentRestaurant;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -151,9 +150,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Yener Kitchen",
-                style: TextStyle(
+              Text(
+                restaurant.name,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Gabarito',
@@ -161,15 +160,11 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
               ),
               Row(
                 children: [
-                  const Icon(
-                    Icons.star,
-                    color: AppColors.brandColor,
-                    size: 16,
-                  ),
+                  const Icon(Icons.star, color: AppColors.brandColor, size: 16),
                   const SizedBox(width: 4),
                   Text(
-                    "4.5 (149)",
-                    style: TextStyle(
+                    "${restaurant.rating} (${restaurant.reviewCount})",
+                    style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.brandColor,
                       fontWeight: FontWeight.bold,
@@ -181,12 +176,16 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
             ],
           ),
           const SizedBox(height: 6),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.location_on_outlined, size: 16, color: Colors.grey),
+              const Icon(
+                Icons.location_on_outlined,
+                size: 16,
+                color: Colors.grey,
+              ),
               Text(
-                " Ataşehir, İstanbul",
-                style: TextStyle(
+                " ${restaurant.location}",
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 13,
                   fontFamily: 'Gabarito',
@@ -195,9 +194,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
-            "Lorem ipsum dolor sit amet consectetur. Commodo ultrices dis suspendisse ornare est.",
-            style: TextStyle(
+          Text(
+            restaurant.description,
+            style: const TextStyle(
               fontSize: 12,
               color: Colors.black54,
               fontFamily: 'Gabarito',
@@ -207,9 +206,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildSmallChip(Icons.attach_money, "Budget"),
+              _buildSmallChip(Icons.attach_money, restaurant.budgetLabel),
               const SizedBox(width: 10),
-              _buildSmallChip(Icons.access_time, "09.00 - 22.00"),
+              _buildSmallChip(Icons.access_time, restaurant.workingHours),
               const SizedBox(width: 48),
               const Icon(Icons.favorite_border, color: Colors.red, size: 28),
             ],
@@ -256,7 +255,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
     );
   }
 
-  Widget _buildFoodCard() {
+  Widget _buildFoodCard(Product product) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -280,7 +279,7 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                   top: Radius.circular(15),
                 ),
                 child: Image.asset(
-                  "assets/images/food_mock.jpg",
+                  product.imageUrl,
                   height: 160,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -305,9 +304,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                         color: AppColors.brandColor,
                         size: 14,
                       ),
-                      const Text(
-                        " 4.5",
-                        style: TextStyle(
+                      Text(
+                        " ${product.rating}",
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Gabarito',
@@ -324,18 +323,18 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Chicken Special",
-                  style: TextStyle(
+                Text(
+                  product.name,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     fontFamily: 'Gabarito',
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Egestas pulvinar tristique hac.",
-                  style: TextStyle(
+                Text(
+                  product.description,
+                  style: const TextStyle(
                     fontSize: 13,
                     color: Colors.grey,
                     fontFamily: 'Gabarito',
@@ -347,9 +346,9 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "\$ 289.90",
-                      style: TextStyle(
+                    Text(
+                      "\$ ${product.price.toStringAsFixed(2)}",
+                      style: const TextStyle(
                         color: AppColors.brandColor,
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -361,7 +360,8 @@ class _RestaurantMenuPageState extends State<RestaurantMenuPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ProductReviewsPage(),
+                            builder: (context) =>
+                                ProductReviewsPage(product: product),
                           ),
                         );
                       },

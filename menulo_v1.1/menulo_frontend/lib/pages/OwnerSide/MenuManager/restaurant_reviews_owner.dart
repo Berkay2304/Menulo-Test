@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 
+
+import 'package:menulo/models/restaurant_model.dart';
+import 'package:menulo/models/review_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class RestaurantReviewsOwnerPage extends StatefulWidget {
-  const RestaurantReviewsOwnerPage({super.key});
+  
+  final Restaurant restaurant;
+
+  const RestaurantReviewsOwnerPage({super.key, required this.restaurant});
 
   @override
   State<RestaurantReviewsOwnerPage> createState() => _RestaurantReviewsOwnerPageState();
@@ -13,6 +21,9 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
 
   @override
   Widget build(BuildContext context) {
+    
+    final List<ReviewModel> reviews = MockData.restaurantReviews;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -43,9 +54,11 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(20),
-              itemCount: 3, 
+              
+              itemCount: reviews.length, 
               itemBuilder: (context, index) {
-                return _buildOwnerReviewCard(index);
+                
+                return _buildOwnerReviewCard(reviews[index]);
               },
             ),
           ],
@@ -65,13 +78,15 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildStatItem("4.5", "Average Rating", Icons.star),
+          
+          _buildStatItem(widget.restaurant.rating.toString(), "Average Rating", Icons.star),
           Container(
             width: 1,
             height: 40,
             color: AppColors.brandColor.withOpacity(0.2),
           ),
-          _buildStatItem("322", "Total Reviews", Icons.maps_ugc_rounded),
+          
+          _buildStatItem(widget.restaurant.reviewCount.toString(), "Total Reviews", Icons.maps_ugc_rounded),
         ],
       ),
     );
@@ -116,7 +131,7 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: ["All", "Latest", "Critical", "Replied"].map((tab) {
-          bool isSelected = tab == "All";
+          bool isSelected = tab == "All"; 
           return Container(
             margin: const EdgeInsets.only(right: 10),
             padding: const EdgeInsets.symmetric(
@@ -142,14 +157,8 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
     );
   }
 
-  Widget _buildOwnerReviewCard(int index) {
-    final List<String> names = ["Maudie", "Davion", "Arda Akar"];
-    final List<String> comments = [
-      "Itaque dolor fuga natus eveniet. Yemekler harikaydı!",
-      "Servis biraz yavaştı ama lezzet yerinde.",
-      "Tavuk şiş efsane, mutlaka deneyin."
-    ];
-
+  
+  Widget _buildOwnerReviewCard(ReviewModel review) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(16),
@@ -170,15 +179,10 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
         children: [
           Row(
             children: [
+              
               CircleAvatar(
+                backgroundImage: AssetImage(review.userProfileImage),
                 backgroundColor: AppColors.brandColor.withOpacity(0.2),
-                child: Text(
-                  names[index][0],
-                  style: const TextStyle(
-                    color: AppColors.brandColor,
-                    fontFamily: 'Gabarito',
-                  ),
-                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -186,16 +190,17 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      names[index],
+                      review.userName, 
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                         fontFamily: 'Gabarito',
                       ),
                     ),
-                    const Text(
-                      "2 hours ago",
-                      style: TextStyle(
+                    Text(
+                      
+                      review.date.isNotEmpty ? review.date : "Recently", 
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 11,
                         fontFamily: 'Gabarito',
@@ -204,12 +209,12 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
                   ],
                 ),
               ),
-              _buildRatingStars(4),
+              _buildRatingStars(review.rating), 
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            comments[index],
+            review.comment, 
             style: const TextStyle(
               color: Colors.black87,
               fontSize: 13,
@@ -222,7 +227,7 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => _showReplyDialog(names[index]),
+                  onPressed: () => _showReplyDialog(review.userName), 
                   icon: const Icon(
                     Icons.reply,
                     size: 16,
@@ -318,7 +323,10 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  
+                  Navigator.pop(context);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.brandColor,
                   padding: const EdgeInsets.symmetric(vertical: 15),
@@ -364,7 +372,10 @@ class _RestaurantReviewsOwnerPageState extends State<RestaurantReviewsOwnerPage>
             ),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              
+              Navigator.pop(context);
+            },
             child: Text(
               "Delete",
               style: TextStyle(color: deleteRed, fontFamily: 'Gabarito'),

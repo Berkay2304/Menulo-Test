@@ -3,6 +3,10 @@ import 'package:menulo/Theme/theme.dart';
 import 'package:menulo/pages/OwnerSide/MenuManager/product_reviews_owner.dart';
 import 'package:menulo/pages/OwnerSide/MenuManager/restaurant_reviews_owner.dart';
 
+
+import 'package:menulo/models/product_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class MenuManagerPage extends StatefulWidget {
   const MenuManagerPage({super.key});
 
@@ -13,15 +17,8 @@ class MenuManagerPage extends StatefulWidget {
 class _MenuManagerPageState extends State<MenuManagerPage> {
   int _selectedCategoryIndex = 2;
 
-  final List<String> _categories = [
-    "All",
-    "Green Menu",
-    "Chicken",
-    "Burger",
-    "Pizza",
-    "Salads",
-    "Drinks",
-  ];
+  
+  final List<String> _categories = MockData.categories;
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +27,17 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Üst Bölüm (Görsel ve Başlık)
+            
             Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
                   height: 250,
                   width: double.infinity,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/restaurant_mock_up.jpg"),
+                      
+                      image: AssetImage(MockData.currentRestaurant.imageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -70,7 +68,7 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const RestaurantReviewsOwnerPage(),
+                                  builder: (context) => RestaurantReviewsOwnerPage(restaurant: MockData.currentRestaurant),
                                 ),
                               );
                             },
@@ -96,7 +94,7 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
 
             const SizedBox(height: 75),
 
-            // Kategori ve Buton Başlığı
+            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -119,20 +117,25 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
             const SizedBox(height: 12),
             _buildCategoryList(),
 
-            // Yemek Listesi
+            
             Container(
               margin: const EdgeInsets.only(top: 12),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF1F4F8),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(35)),
+              decoration: const BoxDecoration(
+                color: Color(0xFFF1F4F8),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
               ),
               child: ListView.builder(
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 4,
-                itemBuilder: (context, index) => _buildManagerFoodCard(),
+                
+                itemCount: MockData.mockProducts.length,
+                itemBuilder: (context, index) {
+                  
+                  final product = MockData.mockProducts[index];
+                  return _buildManagerFoodCard(product);
+                },
               ),
             ),
           ],
@@ -150,11 +153,11 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
           color: AppColors.brandColor.withOpacity(0.12),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
+        child: const Row(
           children: [
-            const Icon(Icons.edit_square, size: 18, color: AppColors.brandColor),
-            const SizedBox(width: 6),
-            const Text(
+            Icon(Icons.edit_square, size: 18, color: AppColors.brandColor),
+            SizedBox(width: 6),
+            Text(
               "Edit Menu",
               style: TextStyle(
                 color: AppColors.brandColor,
@@ -169,7 +172,8 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
     );
   }
 
-  Widget _buildManagerFoodCard() {
+  
+  Widget _buildManagerFoodCard(Product product) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       height: 110,
@@ -191,7 +195,7 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
               left: Radius.circular(20),
             ),
             child: Image.asset(
-              "assets/images/food_mock.jpg",
+              product.imageUrl, 
               width: 110,
               height: 110,
               fit: BoxFit.cover,
@@ -207,9 +211,9 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Chicken Special",
-                        style: TextStyle(
+                      Text(
+                        product.name, 
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                           fontFamily: 'Gabarito',
@@ -220,7 +224,7 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ProductReviewsOwnerPage(),
+                              builder: (context) => ProductReviewsOwnerPage(product: product),
                             ),
                           );
                         },
@@ -232,9 +236,9 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
                       ),
                     ],
                   ),
-                  const Text(
-                    "Lorem ipsum dolor sit amet egestas...",
-                    style: TextStyle(
+                  Text(
+                    product.description, 
+                    style: const TextStyle(
                       fontSize: 11,
                       color: Colors.grey,
                       fontFamily: 'Gabarito',
@@ -245,9 +249,9 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "\$ 289.90",
-                        style: TextStyle(
+                      Text(
+                        "\$ ${product.price.toStringAsFixed(2)}", 
+                        style: const TextStyle(
                           color: AppColors.brandColor,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
@@ -292,6 +296,9 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
   }
 
   Widget _buildBusinessInfoCard() {
+    
+    final restaurant = MockData.currentRestaurant;
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -311,24 +318,24 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Yener Kitchen",
-                style: TextStyle(
+              Text(
+                restaurant.name, 
+                style: const TextStyle(
                   fontSize: 19,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Gabarito',
                 ),
               ),
-              _buildRatingBadge(),
+              _buildRatingBadge(restaurant.rating),
             ],
           ),
           const SizedBox(height: 6),
-          const Row(
+          Row(
             children: [
-              Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
+              const Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
               Text(
-                " Ataşehir, İstanbul",
-                style: TextStyle(
+                " ${restaurant.location}", 
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 13,
                   fontFamily: 'Gabarito',
@@ -337,9 +344,9 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
-            "Lorem ipsum dolor sit amet consectetur. Commodo ultrices dis suspendisse ornare est.",
-            style: TextStyle(
+          Text(
+            restaurant.description, 
+            style: const TextStyle(
               fontSize: 12,
               color: Colors.black54,
               height: 1.3,
@@ -349,9 +356,9 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
           const SizedBox(height: 15),
           Row(
             children: [
-              _buildSmallChip(Icons.attach_money, "Budget"),
+              _buildSmallChip(Icons.attach_money, restaurant.budgetLabel), 
               const SizedBox(width: 10),
-              _buildSmallChip(Icons.access_time, "09.00 - 22.00"),
+              _buildSmallChip(Icons.access_time, restaurant.workingHours), 
             ],
           ),
         ],
@@ -402,23 +409,23 @@ class _MenuManagerPageState extends State<MenuManagerPage> {
     );
   }
 
-  Widget _buildRatingBadge() {
+  Widget _buildRatingBadge(double rating) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: const Color(0xFFFFF7ED),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(
+          const Icon(
             Icons.star,
             color: AppColors.brandColor,
             size: 12,
           ),
           Text(
-            " 4.5",
-            style: TextStyle(
+            " $rating", 
+            style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.bold,
               color: AppColors.brandColor,

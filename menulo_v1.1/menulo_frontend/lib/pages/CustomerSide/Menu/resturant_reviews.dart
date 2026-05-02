@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 
+
+import 'package:menulo/models/restaurant_model.dart';
+import 'package:menulo/models/review_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class RestaurantReviewsPage extends StatelessWidget {
-  const RestaurantReviewsPage({super.key});
+  
+  final Restaurant restaurant;
+
+  const RestaurantReviewsPage({super.key, required this.restaurant});
 
   @override
   Widget build(BuildContext context) {
     final Color primaryColor = AppColors.brandColor;
+    
+    final List<ReviewModel> reviews = MockData.restaurantReviews;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -41,9 +51,9 @@ class RestaurantReviewsPage extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      const Text(
-                        "4.5",
-                        style: TextStyle(
+                      Text(
+                        restaurant.rating.toString(), 
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Gabarito',
@@ -59,9 +69,9 @@ class RestaurantReviewsPage extends StatelessWidget {
                           color: primaryColor.withOpacity(0.8),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text(
-                          "322+ reviews",
-                          style: TextStyle(
+                        child: Text(
+                          "${restaurant.reviewCount}+ reviews", 
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 10,
                             fontFamily: 'Gabarito',
@@ -76,26 +86,17 @@ class RestaurantReviewsPage extends StatelessWidget {
 
             const SizedBox(height: 15),
 
+            
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                _buildReviewItem(
-                  name: "Maudie",
-                  comment: "Itaque dolor fuga natus eveniet.",
-                  rating: 5,
-                  image: "assets/images/face_mock.png",
+              children: reviews.map((review) {
+                return _buildReviewItem(
+                  review: review,
                   primaryColor: primaryColor,
-                ),
-                _buildReviewItem(
-                  name: "Davion",
-                  comment: "Laboriosam voluptatibus voluptatibus deserunt repellendus.",
-                  rating: 4,
-                  image: "assets/images/face_mock.png",
-                  primaryColor: primaryColor,
-                ),
-              ],
+                );
+              }).toList(),
             ),
             
             Padding(
@@ -156,9 +157,9 @@ class RestaurantReviewsPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Yener Kitchen",
-                style: TextStyle(
+              Text(
+                restaurant.name, 
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   fontFamily: 'Gabarito',
@@ -174,7 +175,7 @@ class RestaurantReviewsPage extends StatelessWidget {
                   children: [
                     Icon(Icons.star, color: primaryColor, size: 16),
                     Text(
-                      " 4.5",
+                      " ${restaurant.rating}", 
                       style: TextStyle(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
@@ -191,7 +192,7 @@ class RestaurantReviewsPage extends StatelessWidget {
             children: [
               Icon(Icons.location_on, size: 14, color: Colors.grey.shade400),
               Text(
-                " Ataşehir, İstanbul",
+                " ${restaurant.location}", 
                 style: TextStyle(
                   color: Colors.grey.shade600,
                   fontSize: 13,
@@ -202,7 +203,7 @@ class RestaurantReviewsPage extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            "Lorem ipsum dolor sit amet consectetur. Commodo ultrices dis suspendisse ornare est.",
+            restaurant.description, 
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 14,
@@ -212,9 +213,9 @@ class RestaurantReviewsPage extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              _buildInfoChip(Icons.attach_money, "Budget"),
+              _buildInfoChip(Icons.attach_money, restaurant.budgetLabel),
               const SizedBox(width: 10),
-              _buildInfoChip(Icons.access_time, "09.00 - 22.00"),
+              _buildInfoChip(Icons.access_time, restaurant.workingHours),
             ],
           ),
         ],
@@ -234,7 +235,7 @@ class RestaurantReviewsPage extends StatelessWidget {
           Icon(icon, size: 16, color: Colors.grey.shade600),
           const SizedBox(width: 4),
           Text(
-            label,
+            label, 
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 12,
@@ -246,11 +247,9 @@ class RestaurantReviewsPage extends StatelessWidget {
     );
   }
 
+  
   Widget _buildReviewItem({
-    required String name,
-    required String comment,
-    required int rating,
-    required String image,
+    required ReviewModel review,
     required Color primaryColor,
   }) {
     return Container(
@@ -271,7 +270,7 @@ class RestaurantReviewsPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(backgroundImage: AssetImage(image), radius: 25),
+          CircleAvatar(backgroundImage: AssetImage(review.userProfileImage), radius: 25),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -281,7 +280,7 @@ class RestaurantReviewsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      name,
+                      review.userName,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -291,7 +290,7 @@ class RestaurantReviewsPage extends StatelessWidget {
                     Row(
                       children: List.generate(5, (index) {
                         return Icon(
-                          index < rating ? Icons.star : Icons.star_border,
+                          index < review.rating ? Icons.star : Icons.star_border,
                           color: primaryColor,
                           size: 16,
                         );
@@ -301,7 +300,7 @@ class RestaurantReviewsPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  comment,
+                  review.comment,
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 13,
@@ -340,8 +339,8 @@ class RestaurantReviewsPage extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/face_mock.png"),
+                CircleAvatar(
+                  backgroundImage: AssetImage(MockData.currentUser.profileImageUrl), 
                   radius: 25,
                 ),
                 const SizedBox(width: 12),
@@ -349,9 +348,9 @@ class RestaurantReviewsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Berkay",
-                        style: TextStyle(
+                      Text(
+                        MockData.currentUser.firstName, 
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Gabarito',
                         ),

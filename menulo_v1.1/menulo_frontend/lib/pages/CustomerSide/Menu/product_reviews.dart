@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 
+
+import 'package:menulo/models/product_model.dart';
+import 'package:menulo/models/review_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class ProductReviewsPage extends StatelessWidget {
-  const ProductReviewsPage({super.key});
+  
+  final Product product;
+
+  const ProductReviewsPage({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
+    
+    final List<ReviewModel> reviews = MockData.productReviews;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -17,9 +28,9 @@ class ProductReviewsPage extends StatelessWidget {
                 Container(
                   height: 300,
                   width: double.infinity,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/food_mock.jpg"), 
+                      image: AssetImage(product.imageUrl), 
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -63,16 +74,16 @@ class ProductReviewsPage extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      const Text(
-                        "4.5",
-                        style: TextStyle(
+                      Text(
+                        product.rating.toString(), 
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Gabarito',
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _buildReviewBadge(),
+                      _buildReviewBadge(reviews.length),
                     ],
                   ),
                 ],
@@ -81,23 +92,13 @@ class ProductReviewsPage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
-                children: [
-                  _buildReviewTile(
-                    name: "Maudie",
-                    comment: "Itaque dolor fuga natus eveniet.",
-                    rating: 5,
-                    image: "assets/images/face_mock.png",
-                  ),
-                  _buildReviewTile(
-                    name: "Davion",
-                    comment: "Laboriosam voluptatibus voluptatibus deserunt repellendus.",
-                    rating: 4,
-                    image: "assets/images/face_mock.png",
-                  ),
-                ],
+                children: reviews.map((review) {
+                  return _buildReviewTile(review);
+                }).toList(),
               ),
             ),
 
@@ -158,12 +159,16 @@ class ProductReviewsPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "Margarita Pizza",
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Gabarito',
+              Expanded(
+                child: Text(
+                  product.name, 
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Gabarito',
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Row(
@@ -174,8 +179,8 @@ class ProductReviewsPage extends StatelessWidget {
                     size: 16,
                   ),
                   Text(
-                    " 4.5 (132)",
-                    style: TextStyle(
+                    " ${product.rating}", 
+                    style: const TextStyle(
                       color: AppColors.brandColor,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -193,7 +198,7 @@ class ProductReviewsPage extends StatelessWidget {
               children: [
                 Icon(Icons.location_on_outlined, size: 14, color: Colors.grey),
                 Text(
-                  " Zena",
+                  " Yener Kitchen", 
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 13,
@@ -204,14 +209,16 @@ class ProductReviewsPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            "Lorem ipsum dolor sit amet consectetur. Commodo ultrices dis suspendisse ornare est.",
-            style: TextStyle(
+          Text(
+            product.description, 
+            style: const TextStyle(
               color: Colors.black54,
               fontSize: 13,
               height: 1.4,
               fontFamily: 'Gabarito',
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 15),
           Container(
@@ -220,9 +227,9 @@ class ProductReviewsPage extends StatelessWidget {
               border: Border.all(color: Colors.grey.shade300),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Text(
-              "\$ 13.80",
-              style: TextStyle(
+            child: Text(
+              "\$ ${product.price.toStringAsFixed(2)}", 
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
                 color: Colors.black87,
@@ -235,12 +242,8 @@ class ProductReviewsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewTile({
-    required String name,
-    required String comment,
-    required int rating,
-    required String image,
-  }) {
+  
+  Widget _buildReviewTile(ReviewModel review) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -257,7 +260,10 @@ class ProductReviewsPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(backgroundImage: AssetImage(image), radius: 25),
+          CircleAvatar(
+            backgroundImage: AssetImage(review.userProfileImage), 
+            radius: 25,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -267,7 +273,7 @@ class ProductReviewsPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      name,
+                      review.userName, 
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gabarito',
@@ -277,7 +283,7 @@ class ProductReviewsPage extends StatelessWidget {
                       children: List.generate(
                         5,
                         (i) => Icon(
-                          i < rating ? Icons.star : Icons.star_border,
+                          i < review.rating ? Icons.star : Icons.star_border,
                           color: AppColors.brandColor,
                           size: 16,
                         ),
@@ -286,7 +292,7 @@ class ProductReviewsPage extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  comment,
+                  review.comment, 
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
@@ -324,8 +330,9 @@ class ProductReviewsPage extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/face_mock.png"),
+                CircleAvatar(
+                  
+                  backgroundImage: AssetImage(MockData.currentUser.profileImageUrl),
                   radius: 25,
                 ),
                 const SizedBox(width: 12),
@@ -401,16 +408,16 @@ class ProductReviewsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewBadge() {
+  Widget _buildReviewBadge(int reviewCount) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.brandColor.withOpacity(0.8),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: const Text(
-        "322+ reviews",
-        style: TextStyle(
+      child: Text(
+        "$reviewCount+ reviews", 
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 10,
           fontFamily: 'Gabarito',

@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 
+
+import 'package:menulo/models/product_model.dart';
+import 'package:menulo/models/review_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class ProductReviewsOwnerPage extends StatefulWidget {
-  const ProductReviewsOwnerPage({super.key});
+  
+  final Product product;
+
+  const ProductReviewsOwnerPage({super.key, required this.product});
 
   @override
   State<ProductReviewsOwnerPage> createState() => _ProductReviewsOwnerPageState();
@@ -13,6 +21,9 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final List<ReviewModel> reviews = MockData.productReviews;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -64,9 +75,11 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: 2, 
+              
+              itemCount: reviews.length, 
               itemBuilder: (context, index) {
-                return _buildMealReviewManagerCard(index);
+                
+                return _buildMealReviewManagerCard(reviews[index]);
               },
             ),
           ],
@@ -88,7 +101,7 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
           ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: Image.asset(
-              "assets/images/food_mock.jpg",
+              widget.product.imageUrl, 
               width: 70,
               height: 70,
               fit: BoxFit.cover,
@@ -99,32 +112,35 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Chicken Special",
-                  style: TextStyle(
+                Text(
+                  widget.product.name, 
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     fontFamily: 'Gabarito',
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.star, color: AppColors.brandColor, size: 14),
-                    const Text(
-                      " 4.5",
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, fontFamily: 'Gabarito'),
+                    Text(
+                      " ${widget.product.rating}", 
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, fontFamily: 'Gabarito'),
                     ),
                     const Text(
-                      " (149 Reviews)",
+                      
+                      " (149 Reviews)", 
                       style: TextStyle(fontSize: 12, color: Colors.grey, fontFamily: 'Gabarito'),
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  "\$ 289.90",
-                  style: TextStyle(
+                Text(
+                  "\$ ${widget.product.price.toStringAsFixed(2)}", 
+                  style: const TextStyle(
                     color: AppColors.brandColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
@@ -139,13 +155,8 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
     );
   }
 
-  Widget _buildMealReviewManagerCard(int index) {
-    final List<String> userNames = ["Maudie", "Davion"];
-    final List<String> userComments = [
-      "Sos miktarı biraz azdı ama tavuklar çok iyi pişmişti.",
-      "Porsiyon çok doyurucu, teşekkürler!"
-    ];
-
+  
+  Widget _buildMealReviewManagerCard(ReviewModel review) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(16),
@@ -176,7 +187,7 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
                   ),
                   const SizedBox(width: 10),
                   Text(
-                    userNames[index],
+                    review.userName, 
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Gabarito',
@@ -184,12 +195,12 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
                   ),
                 ],
               ),
-              _buildRatingSmall(index == 0 ? 4 : 5),
+              _buildRatingSmall(review.rating), 
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            userComments[index],
+            review.comment, 
             style: TextStyle(
               color: Colors.grey.shade800,
               fontSize: 13,
@@ -203,14 +214,17 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
           Row(
             children: [
               TextButton.icon(
-                onPressed: () => _replyModal(userNames[index]),
+                
+                onPressed: () => _replyModal(review.userName),
                 icon: const Icon(Icons.chat_bubble_outline, size: 16),
                 label: const Text("Reply", style: TextStyle(fontSize: 13, fontFamily: 'Gabarito')),
                 style: TextButton.styleFrom(foregroundColor: Colors.blueGrey),
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  
+                },
                 icon: Icon(Icons.delete_sweep_outlined, color: deleteRed, size: 22),
               ),
             ],
@@ -287,7 +301,10 @@ class _ProductReviewsOwnerPageState extends State<ProductReviewsOwnerPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  
+                  Navigator.pop(context);
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.brandColor,
                   shape: RoundedRectangleBorder(

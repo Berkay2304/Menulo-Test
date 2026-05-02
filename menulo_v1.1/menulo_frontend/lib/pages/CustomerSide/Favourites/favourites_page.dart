@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 import 'package:menulo/pages/CustomerSide/Menu/restaurant_menu.dart';
 
+
+import 'package:menulo/models/restaurant_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({super.key});
 
@@ -10,32 +14,15 @@ class FavouritesPage extends StatefulWidget {
 }
 
 class _FavouritesPageState extends State<FavouritesPage> {
-  final List<Map<String, String>> _favouriteRestaurants = [
-    {
-      "name": "Rosemary Lounge",
-      "type": "Bar/Pub",
-      "distance": "1.2 km away",
-      "rating": "4.5 (86)",
-      "image": "assets/images/restaurant_mock_up.jpg",
-      "location": "Ataşehir, İstanbul"
-    },
-    {
-      "name": "Tavuk Dünyası",
-      "type": "Restaurant",
-      "distance": "0.3 km away",
-      "rating": "4.2 (112)",
-      "image": "assets/images/restaurant_mock_up.jpg",
-      "location": "Kadıköy, İstanbul"
-    },
-    {
-      "name": "Burger King",
-      "type": "Fast Food",
-      "distance": "0.6 km away",
-      "rating": "4.0 (250)",
-      "image": "assets/images/restaurant_mock_up.jpg",
-      "location": "Beşiktaş, İstanbul"
-    },
-  ];
+  
+  
+  late List<Restaurant> _favouriteRestaurants;
+
+  @override
+  void initState() {
+    super.initState();
+    _favouriteRestaurants = List.from(MockData.favouriteRestaurants);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +66,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                 padding: const EdgeInsets.only(top: 10),
                 itemCount: _favouriteRestaurants.length,
                 itemBuilder: (context, index) {
+                  
                   return _buildFavouriteCard(_favouriteRestaurants[index], index);
                 },
               ),
@@ -89,9 +77,10 @@ class _FavouritesPageState extends State<FavouritesPage> {
     );
   }
 
-  Widget _buildFavouriteCard(Map<String, String> restaurant, int index) {
+  
+  Widget _buildFavouriteCard(Restaurant restaurant, int index) {
     return Dismissible(
-      key: Key("${restaurant['name']}_$index"),
+      key: Key("${restaurant.id}_$index"),
       direction: DismissDirection.endToStart,
       background: Container(
         margin: const EdgeInsets.only(bottom: 15),
@@ -104,6 +93,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
         child: const Icon(Icons.delete_outline, color: Colors.white, size: 30),
       ),
       onDismissed: (direction) {
+        
         setState(() {
           _favouriteRestaurants.removeAt(index);
         });
@@ -136,7 +126,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset(
-                  restaurant["image"]!,
+                  restaurant.imageUrl, 
                   width: 85,
                   height: 85,
                   fit: BoxFit.cover,
@@ -148,7 +138,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      restaurant["name"]!,
+                      restaurant.name, 
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 17,
@@ -157,7 +147,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "${restaurant["type"]} • ${restaurant["distance"]}",
+                      "${restaurant.type} • ${restaurant.distance}", 
                       style: const TextStyle(color: Colors.grey, fontSize: 12, fontFamily: 'Gabarito'),
                     ),
                     const SizedBox(height: 8),
@@ -166,7 +156,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                         const Icon(Icons.star, color: AppColors.brandColor, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          restaurant["rating"]!.split(" ")[0], 
+                          restaurant.rating.toString(), 
                           style: const TextStyle(
                             fontSize: 13, 
                             fontWeight: FontWeight.bold,
@@ -175,7 +165,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
                           ),
                         ),
                         Text(
-                          " ${restaurant["rating"]!.split(" ")[1]}", 
+                          " (${restaurant.reviewCount})", 
                           style: const TextStyle(
                             fontSize: 11, 
                             color: Colors.grey,
@@ -190,7 +180,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
               IconButton(
                 icon: const Icon(Icons.favorite, color: Colors.red),
                 onPressed: () {
-                  // İsteğe bağlı favoriden çıkarma fonksiyonu
+                  
                 },
               ),
             ],

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 import 'package:menulo/pages/CustomerSide/Menu/restaurant_menu.dart';
 
+
+import 'package:menulo/models/restaurant_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class DiscoverPage extends StatefulWidget {
   const DiscoverPage({super.key});
 
@@ -121,16 +125,18 @@ class _DiscoverPageState extends State<DiscoverPage> {
                   child: ListView.builder(
                     controller: scrollController,
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: _showDetail ? 1 : 10,
+                    
+                    itemCount: _showDetail ? 1 : 11, 
                     itemBuilder: (context, index) {
                       if (_showDetail) {
-                        return _buildRestaurantDetailView(context);
+                        return _buildRestaurantDetailView(context, MockData.currentRestaurant);
                       }
                       if (index == 0) return _buildHeader();
 
+                      
                       return InkWell(
                         onTap: _openDetail,
-                        child: _buildRestaurantCard(),
+                        child: _buildRestaurantCard(MockData.currentRestaurant),
                       );
                     },
                   ),
@@ -189,7 +195,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
     );
   }
 
-  Widget _buildRestaurantDetailView(BuildContext context) {
+  
+  Widget _buildRestaurantDetailView(BuildContext context, Restaurant restaurant) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -211,9 +218,9 @@ class _DiscoverPageState extends State<DiscoverPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              "Yener Kitchen",
-              style: TextStyle(
+            Text(
+              restaurant.name, 
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Gabarito',
@@ -225,12 +232,12 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 color: AppColors.brandColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.star, color: AppColors.brandColor, size: 18),
+                  const Icon(Icons.star, color: AppColors.brandColor, size: 18),
                   Text(
-                    " 4.5",
-                    style: TextStyle(
+                    " ${restaurant.rating}", 
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.brandColor,
                       fontFamily: 'Gabarito',
@@ -242,24 +249,24 @@ class _DiscoverPageState extends State<DiscoverPage> {
           ],
         ),
         const SizedBox(height: 6),
-        const Row(
+        Row(
           children: [
-            Icon(Icons.location_on_outlined, size: 18, color: Colors.grey),
-            SizedBox(width: 4),
-            Text("Ataşehir, İstanbul", style: TextStyle(color: Colors.grey, fontFamily: 'Gabarito')),
+            const Icon(Icons.location_on_outlined, size: 18, color: Colors.grey),
+            const SizedBox(width: 4),
+            Text(restaurant.location, style: const TextStyle(color: Colors.grey, fontFamily: 'Gabarito')), 
           ],
         ),
         const SizedBox(height: 16),
-        const Text(
-          "Lorem ipsum dolor sit amet consectetur. Commodo ultrices dis suspendisse ornare est. Maecenas sit non feugiat.",
-          style: TextStyle(color: Colors.black54, height: 1.5, fontSize: 15, fontFamily: 'Gabarito'),
+        Text(
+          restaurant.description, 
+          style: const TextStyle(color: Colors.black54, height: 1.5, fontSize: 15, fontFamily: 'Gabarito'),
         ),
         const SizedBox(height: 20),
         Row(
           children: [
-            _buildInfoChip(Icons.attach_money, "Budget"),
+            _buildInfoChip(Icons.attach_money, restaurant.budgetLabel),
             const SizedBox(width: 12),
-            _buildInfoChip(Icons.access_time, "09.00 - 22.00"),
+            _buildInfoChip(Icons.access_time, restaurant.workingHours),
             const Spacer(),
             const Icon(Icons.favorite_border, color: Colors.red, size: 28),
           ],
@@ -300,7 +307,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
     );
   }
 
-  Widget _buildRestaurantCard() {
+  
+  Widget _buildRestaurantCard(Restaurant restaurant) {
     return Container(
       margin: const EdgeInsets.only(bottom: 15),
       padding: const EdgeInsets.all(12),
@@ -313,32 +321,32 @@ class _DiscoverPageState extends State<DiscoverPage> {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.asset(
-              "assets/images/restaurant_mock_up.jpg",
+              restaurant.imageUrl, 
               width: 75,
               height: 75,
               fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 15),
-          const Expanded(
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Rosemary Lounge",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: 'Gabarito'),
+                  restaurant.name, 
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, fontFamily: 'Gabarito'),
                 ),
                 Text(
-                  "Bar/Pub • 1.2 km away",
-                  style: TextStyle(color: Colors.grey, fontSize: 13, fontFamily: 'Gabarito'),
+                  "Restaurant • ${restaurant.distance}", 
+                  style: const TextStyle(color: Colors.grey, fontSize: 13, fontFamily: 'Gabarito'),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.star, color: AppColors.brandColor, size: 16),
+                    const Icon(Icons.star, color: AppColors.brandColor, size: 16),
                     Text(
-                      " 4.5 (86)",
-                      style: TextStyle(
+                      " ${restaurant.rating} (${restaurant.reviewCount})", 
+                      style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gabarito',

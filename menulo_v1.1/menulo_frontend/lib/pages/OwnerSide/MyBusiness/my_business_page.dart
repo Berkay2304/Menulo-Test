@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:menulo/Theme/theme.dart';
 
+
+import 'package:menulo/models/restaurant_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class MyBusinessPage extends StatefulWidget {
   const MyBusinessPage({super.key});
 
@@ -9,33 +13,56 @@ class MyBusinessPage extends StatefulWidget {
 }
 
 class _MyBusinessPageState extends State<MyBusinessPage> {
-  // Metin kontrolcüleri (Text Controllers)
-  final TextEditingController _nameController = TextEditingController(
-    text: "Yener Kitchen",
-  );
-  final TextEditingController _locationController = TextEditingController(
-    text: "Ataşehir, İstanbul",
-  );
-  final TextEditingController _descController = TextEditingController(
-    text: "Lorem ipsum dolor sit amet consectetur. Commodo ultrices dis suspendisse ornare est.",
-  );
+  
+  late Restaurant _restaurant;
+
+  
+  late TextEditingController _nameController;
+  late TextEditingController _locationController;
+  late TextEditingController _descController;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _restaurant = MockData.currentRestaurant;
+
+    
+    _nameController = TextEditingController(text: _restaurant.name);
+    _locationController = TextEditingController(text: _restaurant.location);
+    _descController = TextEditingController(text: _restaurant.description);
+  }
+
+  @override
+  void dispose() {
+    
+    _nameController.dispose();
+    _locationController.dispose();
+    _descController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    
+    List<String> hours = _restaurant.workingHours.split('-');
+    String openHour = hours.isNotEmpty ? hours[0].trim() : "09.00";
+    String closeHour = hours.length > 1 ? hours[1].trim() : "22.00";
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Üst Arka Plan ve Başlık Alanı
+            
             Stack(
               children: [
                 Container(
                   height: 220,
                   width: double.infinity,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/restaurant_mock_up.jpg"),
+                      image: AssetImage(_restaurant.imageUrl), 
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -77,7 +104,7 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
               ],
             ),
 
-            // Form İçeriği
+            
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -100,14 +127,14 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
                     children: [
                       Expanded(
                         child: _buildTimeField(
-                          "Open @ 09.00",
+                          "Open @ $openHour", 
                           Icons.access_time,
                         ),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
                         child: _buildTimeField(
-                          "Close @ 22.00",
+                          "Close @ $closeHour", 
                           Icons.block_flipped,
                         ),
                       ),
@@ -120,7 +147,8 @@ class _MyBusinessPageState extends State<MyBusinessPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Güncelleme işlemleri buraya eklenebilir.
+                        
+                        
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.brandColor,

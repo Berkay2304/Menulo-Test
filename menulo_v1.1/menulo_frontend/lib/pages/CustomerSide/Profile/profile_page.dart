@@ -3,6 +3,10 @@ import 'package:menulo/Theme/theme.dart';
 import 'package:menulo/notitiers/page_notifiers.dart';
 import 'package:menulo/pages/Splash/splash_screen.dart';
 
+
+import 'package:menulo/models/user_model.dart';
+import 'package:menulo/data/mock_data.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -13,6 +17,15 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool _isDarkMode = false;
   bool _isEditing = false;
+  
+  
+  late UserModel _currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentUser = MockData.currentUser;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,12 +86,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ],
                         ),
-                        child: const CircleAvatar(
+                        child: CircleAvatar(
                           radius: 60,
                           backgroundColor: Colors.grey,
-                          backgroundImage: AssetImage(
-                            "assets/images/profile_mock_up.png",
-                          ),
+                          
+                          backgroundImage: AssetImage(_currentUser.profileImageUrl),
                         ),
                       ),
                     ],
@@ -88,6 +100,28 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
 
             const SizedBox(height: 70),
+
+            
+            if (!_isEditing) ...[
+              Text(
+                "${_currentUser.firstName} ${_currentUser.lastName}",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Gabarito',
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                _currentUser.email,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                  fontFamily: 'Gabarito',
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
 
             _isEditing
                 ? _buildEditForm()
@@ -151,12 +185,13 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: _buildTextField("First Name", "John")),
+              
+              Expanded(child: _buildTextField("First Name", _currentUser.firstName)),
               const SizedBox(width: 16),
-              Expanded(child: _buildTextField("Last Name", "Doe")),
+              Expanded(child: _buildTextField("Last Name", _currentUser.lastName)),
             ],
           ),
-          _buildTextField("E-mail", "Enter your email"),
+          _buildTextField("E-mail", _currentUser.email),
           _buildTextField("Password", "*********", isPassword: true),
           const Align(
             alignment: Alignment.centerLeft,
@@ -171,7 +206,10 @@ class _ProfilePageState extends State<ProfilePage> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: () => setState(() => _isEditing = false),
+              onPressed: () {
+                
+                setState(() => _isEditing = false);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.brandColor,
                 shape: RoundedRectangleBorder(
@@ -208,6 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
           TextField(
             obscureText: isPassword,
             style: const TextStyle(fontFamily: 'Gabarito'),
+            
             decoration: InputDecoration(
               hintText: hint,
               hintStyle: const TextStyle(color: Colors.grey, fontSize: 14, fontFamily: 'Gabarito'),
@@ -294,7 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(width: 8),
-          Icon(Icons.logout, color: AppColors.brandColor),
+          const Icon(Icons.logout, color: AppColors.brandColor),
         ],
       ),
     );
